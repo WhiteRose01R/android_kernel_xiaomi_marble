@@ -185,7 +185,7 @@ int cam_context_buf_done_from_hw(struct cam_context *ctx,
 
 	spin_lock(&ctx->lock);
 	if (list_empty(&ctx->active_req_list)) {
-		CAM_ERR(CAM_CTXT, "[%s][%d] no active request",
+		CAM_WARN_RATE_LIMIT(CAM_CTXT, "[%s][%d] no active request",
 			ctx->dev_name, ctx->ctx_id);
 		spin_unlock(&ctx->lock);
 		return -EIO;
@@ -196,7 +196,7 @@ int cam_context_buf_done_from_hw(struct cam_context *ctx,
 	trace_cam_buf_done("UTILS", ctx, req);
 
 	if (done->request_id != req->request_id) {
-		CAM_ERR(CAM_CTXT,
+		CAM_WARN_RATE_LIMIT(CAM_CTXT,
 			"[%s][%d] mismatch: done req[%lld], active req[%lld]",
 			ctx->dev_name, ctx->ctx_id,
 			done->request_id, req->request_id);
@@ -529,7 +529,7 @@ int32_t cam_context_prepare_dev_to_hw(struct cam_context *ctx,
 	}
 
 	if (req->packet) {
-		CAM_WARN(CAM_CTXT, "[%s][%d] Missing free request local packet",
+		CAM_WARN_RATE_LIMIT(CAM_CTXT, "[%s][%d] Missing free request local packet",
 			ctx->dev_name, ctx->ctx_id);
 		cam_common_mem_free(req->packet);
 		req->packet = NULL;
@@ -1348,7 +1348,7 @@ static int cam_context_dump_context(struct cam_context *ctx,
 		return rc;
 	}
 	if (dump_args->offset >= buf_len) {
-		CAM_WARN(CAM_CTXT, "dump buffer overshoot offset %zu len %zu",
+		CAM_WARN_RATE_LIMIT(CAM_CTXT, "dump buffer overshoot offset %zu len %zu",
 			dump_args->offset, buf_len);
 		cam_mem_put_cpu_buf(dump_args->buf_handle);
 		return -ENOSPC;
@@ -1360,7 +1360,7 @@ static int cam_context_dump_context(struct cam_context *ctx,
 		    (req->num_out_map_entries * 2)) * sizeof(uint64_t);
 
 	if (remain_len < min_len) {
-		CAM_WARN(CAM_CTXT, "dump buffer exhaust remain %zu min %u",
+		CAM_WARN_RATE_LIMIT(CAM_CTXT, "dump buffer exhaust remain %zu min %u",
 			remain_len, min_len);
 		cam_mem_put_cpu_buf(dump_args->buf_handle);
 		return -ENOSPC;

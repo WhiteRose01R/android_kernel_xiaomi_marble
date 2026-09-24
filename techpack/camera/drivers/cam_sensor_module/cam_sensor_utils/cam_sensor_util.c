@@ -1944,7 +1944,7 @@ int msm_cam_sensor_handle_reg_gpio(int seq_type,
 	int gpio_offset = -1;
 
 	if (!gpio_num_info) {
-		CAM_INFO(CAM_SENSOR, "Input Parameters are not proper");
+		CAM_DBG(CAM_SENSOR, "Input Parameters are not proper");
 		return 0;
 	}
 
